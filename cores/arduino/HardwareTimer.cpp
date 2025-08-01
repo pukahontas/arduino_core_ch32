@@ -436,7 +436,7 @@ void HardwareTimer::resumeChannel(uint32_t channel)
     case TIMER_OUTPUT_COMPARE_PWM1:
     case TIMER_OUTPUT_COMPARE_PWM2: 
     {
-#if defined(TIM_CC1NE)
+#if false && defined(TIM_CC1NE) /* not sure why the CCxNE flag doesn't work for inverted PWM pins, but the non-inverted one does */
         if (isComplementaryChannel[channel - 1]) 
         {
           TIM_CCxNCmd( _timerObj.handle.Instance, timChannel, TIM_CCxN_Enable );

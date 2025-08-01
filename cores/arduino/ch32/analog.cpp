@@ -770,12 +770,16 @@ void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareForma
   uint32_t channel = CH_PIN_CHANNEL(pinmap_function(pin, PinMap_TIM));
 
   previousMode = HT->getMode(channel);
-  if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
-    HT->setMode(channel, TIMER_OUTPUT_COMPARE_PWM1, pin);
+
+  // Set PWM mode 2 if the channel output is inverted, otherwise set PWM mode 1
+  TimerModes_t setMode = CH_PIN_INVERTED(pinmap_function(pin, PinMap_TIM)) ? TIMER_OUTPUT_COMPARE_PWM2 : TIMER_OUTPUT_COMPARE_PWM1;  
+  
+  if (previousMode != setMode) {
+    HT->setMode(channel, setMode, pin);
   }
   HT->setOverflow(PWM_freq, HERTZ_FORMAT);
   HT->setCaptureCompare(channel, value, resolution);
-  if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
+  if (previousMode != setMode) {
     HT->resume();
   }
 }
