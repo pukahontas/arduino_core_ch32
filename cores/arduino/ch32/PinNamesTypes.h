@@ -164,9 +164,6 @@ extern "C" {
             CH_PIN_DEFINE(MODE, CNF, PUPD, AFNUM)
 #define CH_PIN_DATA_EXT(MODE, CNF, PUPD, AFNUM, CHAN) \
             CH_PIN_DEFINE_EXT(MODE, CNF, PUPD, AFNUM, CHAN)
-#define CH_PIN_DATA_TIM(MODE, CNF, PUPD, AFNUM, CHAN, INV) \
-            CH_PIN_DEFINE_EXT(MODE, CNF, PUPD, AFNUM, CHAN) |\
-            ((INV & CH_PIN_INV_MASK) << CH_PIN_INV_SHIFT)
 
 
 /*
@@ -205,10 +202,6 @@ typedef enum {
 #define NOPULL               (0)
 #define PULLUP               (1)
 #define PILLDOWN             (2)
-
-/* TIM OUTPUT INVERTED */
-#define CH_TIM_NOINV (0)
-#define CH_TIM_INV (1)
 
 
 #if !defined(CH32X035)
