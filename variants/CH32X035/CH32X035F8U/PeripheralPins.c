@@ -97,9 +97,8 @@ WEAK const PinMap PinMap_TIM[] = {
   {PB_11,      TIM2, CH_PWM_SETUP(AFIO_FullRemap_TIM2_ENABLE,     1, TIM_NEG)}, // TIM2_CH1N_6
   {PB_12,      TIM2, CH_PWM_SETUP(AFIO_FullRemap_TIM2_ENABLE,     2, TIM_NEG)}, // TIM2_CH2N_6
   {PB_3,       TIM2, CH_PWM_SETUP(AFIO_FullRemap_TIM2_ENABLE,     3, TIM_NEG)}, // TIM2_CH3N_6
-  {PA_6,       TIM3, CH_PWM_SETUP(AFIO_NONE,                      1, TIM_NEG)}, // TIM2_CH2N_6
-  {PA_7,       TIM3, CH_PWM_SETUP(AFIO_NONE,                      2, TIM_NEG)}, // TIM2_CH3N_6
-  {PA_4,       TIM3, CH_PWM_SETUP(AFIO_FullRemap_TIM3_ENABLE,     2, TIM_POS)}, // TIM3_CH2_6
+  {PA_3,       TIM3, CH_PWM_SETUP(AFIO_FullRemap_TIM3_ENABLE,     1, TIM_POS)}, // TIM3_CH1_4
+  {PA_4,       TIM3, CH_PWM_SETUP(AFIO_FullRemap_TIM3_ENABLE,     2, TIM_POS)}, // TIM3_CH2_4
 
 
   {NC,         NP,   0}
