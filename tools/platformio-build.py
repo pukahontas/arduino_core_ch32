@@ -35,6 +35,8 @@ board = env.BoardConfig()
 mcu = board.get("build.mcu")
 if mcu.startswith("ch32x03"):
     chip_series: str = board.get("build.series", "").upper()
+elif mcu.startswith("ch32v00") and not mcu.startswith("ch32v003"):
+    chip_series = "CH32VM00X"
 else:
     chip_series: str = board.get("build.series", "")[0:-1].upper() + "x"
 variant_h = board.get("build.arduino.openwch.variant_h")
