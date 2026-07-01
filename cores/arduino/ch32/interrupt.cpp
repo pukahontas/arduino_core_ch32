@@ -93,7 +93,7 @@ static const uint32_t exti_lines[NB_EXTI] = {
   EXTI_Line4,  EXTI_Line5,  EXTI_Line6,  EXTI_Line7, 
   EXTI_Line8,  EXTI_Line9,  EXTI_Line10, EXTI_Line11,
   EXTI_Line12, EXTI_Line13, EXTI_Line14, EXTI_Line15,
-  EXTI_Line16, EXTI_Line17, EXTI_Line19, EXTI_Line19,
+  EXTI_Line16, EXTI_Line17, EXTI_Line18, EXTI_Line19,
   EXTI_Line20, EXTI_Line21, EXTI_Line22, EXTI_Line23,
   EXTI_Line24, EXTI_Line25  
 };
@@ -117,7 +117,7 @@ static const uint32_t exti_lines[NB_EXTI] = {
   * @param  pin : one of the gpio pin
   * @retval None
   */
-static uint8_t get_pin_id(uint16_t pin)
+static uint8_t get_pin_id(uint32_t pin)
 {
   uint8_t id = 0;
 
@@ -129,13 +129,13 @@ static uint8_t get_pin_id(uint16_t pin)
   return id;
 }
 
-void ch32_interrupt_enable(GPIO_TypeDef *port, GPIOMode_TypeDef io_mode,uint16_t pin, void (*callback)(void), EXTIMode_TypeDef it_mode, EXTITrigger_TypeDef trigger_mode)
+void ch32_interrupt_enable(GPIO_TypeDef *port, GPIOMode_TypeDef io_mode, uint32_t pin, void (*callback)(void), EXTIMode_TypeDef it_mode, EXTITrigger_TypeDef trigger_mode)
 {
     GPIO_InitTypeDef GPIO_InitStruct={0};
     EXTI_InitTypeDef EXTI_InitStruct={0};
     // RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
     uint8_t id = get_pin_id(pin);
-    uint8_t gpio_port_souce=0;
+    uint8_t gpio_port_source = 0;
     GPIO_InitStruct.GPIO_Pin  = pin;
     GPIO_InitStruct.GPIO_Mode = io_mode;
     #if defined (CH32VM00X)
@@ -146,31 +146,31 @@ void ch32_interrupt_enable(GPIO_TypeDef *port, GPIOMode_TypeDef io_mode,uint16_t
     GPIO_Init(port, &GPIO_InitStruct);
 
     #if defined(GPIOA_BASE)
-    if(port == GPIOA)  gpio_port_souce = GPIO_PortSourceGPIOA;
+    if(port == GPIOA)  gpio_port_source = GPIO_PortSourceGPIOA;
     #endif
     #if defined(GPIOB_BASE) 
-    if(port == GPIOB)  gpio_port_souce = GPIO_PortSourceGPIOB;
+    if(port == GPIOB)  gpio_port_source = GPIO_PortSourceGPIOB;
     #endif
     #if defined(GPIOC_BASE)
-    if(port == GPIOC)  gpio_port_souce = GPIO_PortSourceGPIOC;
+    if(port == GPIOC)  gpio_port_source = GPIO_PortSourceGPIOC;
     #endif
     #if defined(GPIOD_BASE)
-    if(port == GPIOD)  gpio_port_souce = GPIO_PortSourceGPIOD;
+    if(port == GPIOD)  gpio_port_source = GPIO_PortSourceGPIOD;
     #endif
     #if defined(GPIOE_BASE)
-    if(port == GPIOE)  gpio_port_souce = GPIO_PortSourceGPIOE;
+    if(port == GPIOE)  gpio_port_source = GPIO_PortSourceGPIOE;
     #endif
     #if defined(GPIOF_BASE)
-    if(port == GPIOF)  gpio_port_souce = GPIO_PortSourceGPIOF;
+    if(port == GPIOF)  gpio_port_source = GPIO_PortSourceGPIOF;
     #endif
     #if defined(GPIOG_BASE)
-    if(port == GPIOG)  gpio_port_souce = GPIO_PortSourceGPIOG;
+    if(port == GPIOG)  gpio_port_source = GPIO_PortSourceGPIOG;
     #endif
     #if defined(GPIOH_BASE)
-    if(port == GPIOH)  gpio_port_souce = GPIO_PortSourceGPIOH;
+    if(port == GPIOH)  gpio_port_source = GPIO_PortSourceGPIOH;
     #endif
 
-    GPIO_EXTILineConfig(gpio_port_souce, id);
+    GPIO_EXTILineConfig(gpio_port_source, id);
     EXTI_InitStruct.EXTI_Line = exti_lines[id];
     EXTI_InitStruct.EXTI_LineCmd = ENABLE;
     EXTI_InitStruct.EXTI_Mode = it_mode;
@@ -190,7 +190,7 @@ void ch32_interrupt_enable(GPIO_TypeDef *port, GPIOMode_TypeDef io_mode,uint16_t
   * @param  pin : one of the gpio pin
   * @retval None
   */
-void ch32_interrupt_disable(GPIO_TypeDef *port, uint16_t pin)
+void ch32_interrupt_disable(GPIO_TypeDef *port, uint32_t pin)
 {
   uint8_t id = get_pin_id(pin);
   gpio_irq_conf[id].callback = NULL;
@@ -209,7 +209,7 @@ void ch32_interrupt_disable(GPIO_TypeDef *port, uint16_t pin)
   * @param  GPIO_Pin : one of the gpio pin
   * @retval None
   */
-void _gpio_exti_callback(uint16_t GPIO_Pin)
+void _gpio_exti_callback(uint32_t GPIO_Pin)
 {
   uint8_t irq_id = get_pin_id(GPIO_Pin);
   if (gpio_irq_conf[irq_id].callback != NULL) {
