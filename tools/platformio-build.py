@@ -22,7 +22,7 @@ kinds of creative coding, interactive objects, spaces or physical experiences.
 http://arduino.cc/en/Reference/HomePage
 """
 
-from os.path import isdir, join
+from os.path import isdir, join, isfile
 import sys
 
 from SCons.Script import DefaultEnvironment
@@ -35,6 +35,8 @@ board = env.BoardConfig()
 mcu = board.get("build.mcu")
 if mcu.startswith("ch32x03"):
     chip_series: str = board.get("build.series", "").upper()
+elif mcu.startswith("ch32m00") or (mcu.startswith("ch32v00") and not mcu.startswith("ch32v003")):
+    chip_series = "CH32VM00X"
 else:
     chip_series: str = board.get("build.series", "")[0:-1].upper() + "x"
 variant_h = board.get("build.arduino.openwch.variant_h")
@@ -217,9 +219,13 @@ if variant != "":
         CPPPATH=[
             join(variants_dir, variant)
         ],
-        LDSCRIPT_PATH=join(FRAMEWORK_DIR, "system", chip_series, "SRC", "Ld", "Link.ld"),
-
     )
+    # set the default linker script for the variant (based on chip series) only if not set already
+    if not board.get("build.ldscript", ""):
+        env.Replace(LDSCRIPT_PATH=join(FRAMEWORK_DIR, "system", chip_series, "SRC", "Ld", "Link.ld"))
+        if not isfile(env.subst(env["LDSCRIPT_PATH"])):
+            print("Warning! Cannot find linker script for the current target!\n")
+
     env.BuildSources(
         join("$BUILD_DIR", "FrameworkArduinoVariant"),
         join(variants_dir, variant)
